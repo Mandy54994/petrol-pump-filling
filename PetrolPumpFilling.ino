@@ -13,7 +13,7 @@ char keys[ROW_NUM][COLUMN_NUM] = {
   {'7','8','9', 'C'},
   {'*','0','#', 'D'}
 };
-char input[12];
+char input[13];
 
 byte pin_rows[ROW_NUM] = {9, 8, 7, 6}; //connect to the row pinouts of the keypad
 byte pin_column[COLUMN_NUM] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
@@ -29,8 +29,19 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
 class Person{
-  
+  public:
+    char pname[12];
+    int balance;
+    char tag[13];
+    Person(){}
+    Person(char nm[12],int blc ,char t[13]){
+      strcpy(pname,nm);
+      balance=blc;
+      strcpy(tag,t);
+    }
 };
+
+Person pObj[3]={Person("A",5000,"1234567890ab"),Person("B",5000,"1234567890cd"),Person("C",5000,"1234567890ef")};
 
 void setup() {
   lcd.begin(16,2);
@@ -56,10 +67,10 @@ void loop() {
       delay(2);
     }
     lcd.clear();
-    Serial.print(tags[0]);
-    delay(1000);
+//    lcd.print(pObj[0].tag);
+//    delay(1000);
     for(int i=0;i<3;i++){
-      result=strcmp(input,tags[i]);
+      result=strcmp(input,pObj[i].tag);
       if(result==0){
         index=i;
         break;
@@ -85,16 +96,16 @@ void loop() {
         delay(50);
       }
       lcd.clear();
-      if(balance[index]<amount){
+      if(pObj[index].balance<amount){
         lcd.print("  Insufficient");
         lcd.setCursor(0,1);
         lcd.print("    Balance");
       }else{
-        balance[index]=balance[index]-amount;
+        pObj[index].balance=pObj[index].balance-amount;
         lcd.print("Balance:");
         lcd.setCursor(0,1);
         lcd.print("Rs.");
-        lcd.print(balance[index]);
+        lcd.print(pObj[index].balance);
       }
       delay(1000);
     }
