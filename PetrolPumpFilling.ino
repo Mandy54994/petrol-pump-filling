@@ -28,6 +28,10 @@ byte pin_column[COLUMN_NUM] = {5, 4, 3, 2}; //connect to the column pinouts of t
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
+class Person{
+  
+};
+
 void setup() {
   lcd.begin(16,2);
   Serial.begin(9600);
