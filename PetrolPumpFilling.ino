@@ -5,6 +5,7 @@ const int ROW_NUM = 4; //four rows
 const int COLUMN_NUM = 4; //four columns
 int count=0;
 int balance[3]={5000,5000,5000};
+const int buzzer=10,pump=11;
 
 const char tags[3][12]={"1234567890ab","1234567890cd","1234567890ef"};
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -46,6 +47,8 @@ Person pObj[3]={Person("A",5000,"1234567890ab"),Person("B",5000,"1234567890cd"),
 void setup() {
   lcd.begin(16,2);
   Serial.begin(9600);
+  pinMode(buzzer,OUTPUT);
+  pinMode(pump,OUTPUT);
 }
 
 void loop() {
@@ -67,8 +70,6 @@ void loop() {
       delay(2);
     }
     lcd.clear();
-//    lcd.print(pObj[0].tag);
-//    delay(1000);
     for(int i=0;i<3;i++){
       result=strcmp(input,pObj[i].tag);
       if(result==0){
@@ -87,9 +88,16 @@ void loop() {
         if(key){
           if(key=='A')
           break;
+          if(key=='B'){
+            lcd.setCursor(3,1);
+            lcd.print("         ");
+            lcd.setCursor(3,1);
+            amount=0;
+            continue;
+          }
           lcd.print(key);
           int digit=key-'0';
-          amount=amount*i;
+          amount=amount*10;
           amount=amount+digit;
           i=i*10;
         }
@@ -99,8 +107,9 @@ void loop() {
       if(pObj[index].balance<amount){
         lcd.print("  Insufficient");
         lcd.setCursor(0,1);
-        lcd.print("    Balance");
+        lcd.print("    Balanca");
       }else{
+        fillPetrol(amount);
         pObj[index].balance=pObj[index].balance-amount;
         lcd.print("Balance:");
         lcd.setCursor(0,1);
@@ -114,3 +123,19 @@ void loop() {
     delay(2000);
   }
 }
+
+void fillPetrol(int amt){
+  int timesec;
+  float t;
+  t=amt/2.4;
+  timesec=ceil(t);
+  Serial.println(timesec);
+  lcd.print("Filling...");
+  digitalWrite(pump,HIGH);
+  digitalWrite(buzzer,HIGH);
+  delay(timesec*1000);
+  digitalWrite(pump,LOW);
+  digitalWrite(buzzer,LOW);
+  lcd.clear();
+}
+
