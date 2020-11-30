@@ -4,10 +4,8 @@
 const int ROW_NUM = 4; //four rows
 const int COLUMN_NUM = 4; //four columns
 int count=0;
-int balance[3]={5000,5000,5000};
 const int buzzer=10,pump=11;
 
-const char tags[3][12]={"1234567890ab","1234567890cd","1234567890ef"};
 char keys[ROW_NUM][COLUMN_NUM] = {
   {'1','2','3', 'A'},
   {'4','5','6', 'B'},
@@ -42,7 +40,7 @@ class Person{
     }
 };
 
-Person pObj[3]={Person("A",5000,"1234567890ab"),Person("B",5000,"1234567890cd"),Person("C",5000,"1234567890ef")};
+Person pObj[5]={Person("A",5000,"3000505A003A"),Person("B",5000,"30004F46122B"),Person("C",5000,"30004F460831"),Person("D",5000,"07003E6CAEFB"),Person("E",5000,"07005C1DDF99")};
 
 void setup() {
   lcd.begin(16,2);
@@ -56,9 +54,9 @@ void loop() {
   int index=-1;
   //lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print("   WELCOME TO");
+  lcd.print("   WELCOME TO   ");
   lcd.setCursor(0,1);
-  lcd.print("   PETROL PUMP");
+  lcd.print("   PETROL PUMP  ");
 
   if(Serial.available())
   {
@@ -70,7 +68,7 @@ void loop() {
       delay(2);
     }
     lcd.clear();
-    for(int i=0;i<3;i++){
+    for(int i=0;i<5;i++){
       result=strcmp(input,pObj[i].tag);
       if(result==0){
         index=i;
@@ -129,11 +127,23 @@ void fillPetrol(int amt){
   float t;
   t=amt/2.4;
   timesec=ceil(t);
-  Serial.println(timesec);
-  lcd.print("Filling...");
+  //Serial.println(timesec);
   digitalWrite(pump,HIGH);
   digitalWrite(buzzer,HIGH);
-  delay(timesec*1000);
+  for(int i=0;i<timesec;i++){
+    lcd.setCursor(0,0);
+    lcd.print("Filling   ");
+    delay(250);
+    lcd.setCursor(0,0);
+    lcd.print("Filling.  ");
+    delay(250);
+    lcd.setCursor(0,0);
+    lcd.print("Filling.. ");
+    delay(250);
+    lcd.setCursor(0,0);
+    lcd.print("Filling...");
+    delay(250);
+  }
   digitalWrite(pump,LOW);
   digitalWrite(buzzer,LOW);
   lcd.clear();
